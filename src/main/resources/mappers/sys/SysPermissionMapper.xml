@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chieftain.agile.dao.sys.SysPermissionMapper" >
+  <resultMap id="BaseResultMap" type="com.chieftain.agile.entity.sys.SysPermission" >
+    <id column="menuId" property="menuid" jdbcType="VARCHAR" />
+    <result column="menuName" property="menuname" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="permission" property="permission" jdbcType="VARCHAR" />
+    <result column="parentId" property="parentid" jdbcType="VARCHAR" />
+    <result column="parentIds" property="parentids" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="menuUrl" property="menuurl" jdbcType="VARCHAR" />
+    <result column="menuNodeType" property="menunodetype" jdbcType="INTEGER" />
+    <result column="menuState" property="menustate" jdbcType="INTEGER" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="updater" property="updater" jdbcType="VARCHAR" />
+    <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    menuId, menuName, type, permission, parentId, parentIds, level, menuUrl, menuNodeType, 
+    menuState, sort, icon, updater, updateTime, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_permission
+    where menuId = #{menuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_permission
+    where menuId = #{menuid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.chieftain.agile.entity.sys.SysPermission" >
+    insert into sys_permission (menuId, menuName, type, 
+      permission, parentId, parentIds, 
+      level, menuUrl, menuNodeType, 
+      menuState, sort, icon, 
+      updater, updateTime, createTime
+      )
+    values (#{menuid,jdbcType=VARCHAR}, #{menuname,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{permission,jdbcType=VARCHAR}, #{parentid,jdbcType=VARCHAR}, #{parentids,jdbcType=VARCHAR}, 
+      #{level,jdbcType=VARCHAR}, #{menuurl,jdbcType=VARCHAR}, #{menunodetype,jdbcType=INTEGER}, 
+      #{menustate,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{icon,jdbcType=VARCHAR}, 
+      #{updater,jdbcType=VARCHAR}, #{updatetime,jdbcType=TIMESTAMP}, #{createtime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.chieftain.agile.entity.sys.SysPermission" >
+    insert into sys_permission
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="menuid != null" >
+        menuId,
+      </if>
+      <if test="menuname != null" >
+        menuName,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="permission != null" >
+        permission,
+      </if>
+      <if test="parentid != null" >
+        parentId,
+      </if>
+      <if test="parentids != null" >
+        parentIds,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="menuurl != null" >
+        menuUrl,
+      </if>
+      <if test="menunodetype != null" >
+        menuNodeType,
+      </if>
+      <if test="menustate != null" >
+        menuState,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="icon != null" >
+        icon,
+      </if>
+      <if test="updater != null" >
+        updater,
+      </if>
+      <if test="updatetime != null" >
+        updateTime,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="menuid != null" >
+        #{menuid,jdbcType=VARCHAR},
+      </if>
+      <if test="menuname != null" >
+        #{menuname,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null" >
+        #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null" >
+        #{parentid,jdbcType=VARCHAR},
+      </if>
+      <if test="parentids != null" >
+        #{parentids,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="menuurl != null" >
+        #{menuurl,jdbcType=VARCHAR},
+      </if>
+      <if test="menunodetype != null" >
+        #{menunodetype,jdbcType=INTEGER},
+      </if>
+      <if test="menustate != null" >
+        #{menustate,jdbcType=INTEGER},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null" >
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chieftain.agile.entity.sys.SysPermission" >
+    update sys_permission
+    <set >
+      <if test="menuname != null" >
+        menuName = #{menuname,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null" >
+        permission = #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null" >
+        parentId = #{parentid,jdbcType=VARCHAR},
+      </if>
+      <if test="parentids != null" >
+        parentIds = #{parentids,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="menuurl != null" >
+        menuUrl = #{menuurl,jdbcType=VARCHAR},
+      </if>
+      <if test="menunodetype != null" >
+        menuNodeType = #{menunodetype,jdbcType=INTEGER},
+      </if>
+      <if test="menustate != null" >
+        menuState = #{menustate,jdbcType=INTEGER},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null" >
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where menuId = #{menuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chieftain.agile.entity.sys.SysPermission" >
+    update sys_permission
+    set menuName = #{menuname,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      permission = #{permission,jdbcType=VARCHAR},
+      parentId = #{parentid,jdbcType=VARCHAR},
+      parentIds = #{parentids,jdbcType=VARCHAR},
+      level = #{level,jdbcType=VARCHAR},
+      menuUrl = #{menuurl,jdbcType=VARCHAR},
+      menuNodeType = #{menunodetype,jdbcType=INTEGER},
+      menuState = #{menustate,jdbcType=INTEGER},
+      sort = #{sort,jdbcType=INTEGER},
+      icon = #{icon,jdbcType=VARCHAR},
+      updater = #{updater,jdbcType=VARCHAR},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      createTime = #{createtime,jdbcType=TIMESTAMP}
+    where menuId = #{menuid,jdbcType=VARCHAR}
+  </update>
+</mapper>

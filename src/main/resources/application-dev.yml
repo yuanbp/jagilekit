@@ -1,0 +1,119 @@
+application:
+  message: Hello, Junite
+server:
+  port: 80
+  servlet:
+    context-path: /
+logging:
+  config: classpath:configs/log4j2.xml
+spring:
+  profiles: dev
+  application:
+    name: junite
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.145.170:3306/jagilekit?characterEncoding=utf8&nullCatalogMeansCurrent=true&nullNamePatternMatchesAll=true&useSSL=false
+    username: root
+    password: 123456
+    initialSize: 5
+    minIdle: 5
+    maxActive: 300
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 100
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat,wall,log4j2
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/
+  freemarker:
+    cache: false
+    charset: UTF-8
+    settings.template_update_delay: 0
+    check-template-location: true
+    content-type: text/html
+    expose-request-attributes: false
+    expose-session-attributes: false
+    expose-spring-macro-helpers: false
+    request-context-attribute: request
+    allow-request-override: true
+    allow-session-override: true
+    template-loader-path: 'classpath:/templates/'
+    prefix:
+    suffix: .ftl
+    settings:
+#      auto_import: common/common.ftl as com
+      datetime_format: yyyy-MM-dd hh:mm:ss
+      classic_compatible: true
+  mvc:
+    static-path-pattern: /static/**
+  cache:
+    type: ehcache
+    ehcache:
+      config: classpath:configs/ehcache.xml
+  redis:
+    host: 192.168.145.170
+    port: 6379
+    password: 123456
+    database: 0
+    timeout: 5000
+    pool:
+      max-active: 30
+      max-idle: 150
+      max-wait: 30000
+      min-idle: 5
+    jedis:
+      pool:
+        max-active: 30
+        max-idle: 150
+        max-wait: 30000
+        min-idle: 5
+  aop:
+    auto: true
+    proxy-target-class: true
+mybatis:
+  config-location: classpath:configs/mybatis-config.xml
+  mapper-locations: classpath*:mappers/**/*.xml
+#  读取配置，在MybatisConfiguration中使用 （设置别名，ep:parameterType="com.bean.User" 可以写成 parameterType = "User"，但是启动时DefaultVFS会输出乱码 Reader entry: ����，原因是扫描了未编译的pojo，不影响使用，为了美观和简洁，不设置别名，使用全路径）
+  type-aliases-package: com.chieftain.junite.entity
+mapper:
+  mappers: com.chieftain.junite.dao
+  not-empty: false
+  identity: MYSQL
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+  returnPageInfo: check
+  offsetAsPageNum: true
+  rowBoundsWithCount: true
+shiro:
+  credentials:
+    hashIterations: 3
+    hashAlgorithmName: MD5
+    retryDisable: 5
+  session:
+    timeout: 14400000
+jedis:
+  host: 192.168.145.170
+  port: 6379
+  password: 123456
+  database: 0
+  timeout: 5000
+  pool:
+    max-active: 30
+    max-idle: 150
+    max-wait: 30000
+    min-idle: 5

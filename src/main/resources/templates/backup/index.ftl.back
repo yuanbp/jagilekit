@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>JAgileKit 快速开发平台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" href="/static/images/java.ico"/>
+
+<#include "common/common-style.ftl" />
+
+</head>
+<body class=layui-layout-body">
+<#--<@shiro.hasPermission name="admin:add"></@shiro.hasPermission>-->
+<#--<@shiro.hasRole name="basic"></@shiro.hasRole>-->
+<@shiro.authenticated>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">JAgileKit 快速开发平台</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">其它功能</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">邮件管理</a></dd>
+                    <dd><a href="">消息管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <span id="userInfoSp">${loginName}</span> [用户信息]
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="/logout">注销</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">内容主体区域</div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>
+
+    <#include "common/common-script.ftl"/>
+<script>
+    //JavaScript代码区域
+    layui.use(['layer', 'jquery', 'form', 'element'], function () {
+        let $ = layui.jquery
+                , form = layui.form
+                , layer = layui.layer
+                , element = layui.element;
+
+        $(()=>{
+            $.ajax({
+                url : '/userInfo',
+                type : 'post',
+                data : {'param':'none'},
+                dataType : 'json',
+                success : (data)=>{
+                    let jsonObj = JSON.parse(data);
+                    let jsonStr = JSON.stringify(jsonObj);
+                    $('#userInfoSp').text(jsonObj.loginName);
+                },
+                error : (jqXHR, textStatus, errorThrown)=>{
+                    layer.alert('获取登陆用户名异常.', {
+                        skin: 'layui-layer-lan',
+                        icon: 5
+                        , closeBtn: 0
+                        , anim: 6
+                    });
+                }
+            })
+        })
+    });
+
+    $(()=>{
+        $.ajax({
+            url : '/findMenuByLogined',
+            type : 'post',
+            data : {'param':'none'},
+            dataType : 'json',
+            success : (data)=>{
+                let jsonObj = JSON.parse(data);
+                let jsonStr = JSON.stringify(jsonObj);
+                createMenu(jsonObj);
+            },
+            error : (jqXHR, textStatus, errorThrown)=>{
+                layer.alert('获取带单数据异常.', {
+                    skin: 'layui-layer-lan',
+                    icon: 5
+                    , closeBtn: 0
+                    , anim: 6
+                });
+            }
+        })
+    });
+
+    let data = [
+        {id: 1, address: "安徽", parent_id: 0},
+        {id: 2, address: "江苏", parent_id: 0},
+        {id: 3, address: "合肥", parent_id: 1},
+        {id: 4, address: "庐阳区", parent_id: 3},
+        {id: 5, address: "大杨镇", parent_id: 4},
+        {id: 6, address: "南京", parent_id: 2},
+        {id: 7, address: "玄武区", parent_id: 6},
+        {id: 8, address: "梅园新村街道", parent_id: 7},
+        {id: 9, address: "上海", parent_id: 0},
+        {id: 10, address: "黄浦区", parent_id: 9},
+        {id: 11, address: "外滩", parent_id: 10},
+        {id: 12, address: "安庆", parent_id: 1}
+    ];
+
+    //根据最后一个找到整个家族
+    function familyTree(arr, pid) {
+        var temp = [];
+        var forFn = function (arr, pid) {
+            for (var i = 0; i < arr.length; i++) {
+                var item = arr[i];
+                if (item.id == pid) {
+                    temp.push(item);
+
+                    forFn(arr, item.parent_id);
+                }
+            }
+        };
+        forFn(arr, pid);
+        return temp;
+    }
+
+    //子孙树，从顶级往下找到是有的子子孙孙
+    function sonsTree(arr, id) {
+        var temp = [], lev = 0;
+        var forFn = function (arr, id, lev) {
+            for (var i = 0; i < arr.length; i++) {
+                var item = arr[i];
+                if (item.parent_id == id) {
+                    item.lev = lev;
+                    temp.push(item);
+                    forFn(arr, item.id, lev + 1);
+                }
+            }
+        };
+        forFn(arr, id, lev);
+        return temp;
+    }
+
+        //利用 子孙树 生成dom结构
+    //    var tree = sonsTree(data, 0);
+    //    var temp = [];
+    //    for (var i = 0; i < tree.length; i++) {
+    //        var item = tree[i], u = "";
+    //        if (i > 0) {
+    //            u = "</dl></li>";
+    //        }
+    //        if (item['lev'] == 0) {
+    //            temp.push(u + '<li class="layui-nav-item"><a  class="" href="javascript:;">' + item.address + '</a><dl class="layui-nav-child">');
+    //        } else {
+    //            temp.push('<dd><a href="javascript:;">' + item.address + '</a></dd>')
+    //        }
+    //        if (i + 1 == tree.length) {
+    //            temp.push("</dl></li>")
+    //        }
+    //    }
+    //
+    //    let htmlText = '<ul class="layui-nav layui-nav-tree" lay-filter="test">';
+    //    htmlText = htmlText + '<li class="layui-nav-item"><a href="">后台首页</a></li>';
+    //    for (let i = 0; i < temp.length; i++) {
+    //        htmlText = htmlText + temp[i];
+    //    }
+    //    htmlText = htmlText + '</ul>';
+    //    $('div [class="layui-side-scroll"]').html(htmlText);
+    //    console.log(htmlText);
+
+    function createMenu(data){
+        var tree = sonsTree(data, 0);
+        var temp = [];
+        for (var i = 0; i < tree.length; i++) {
+            var item = tree[i], u = "";
+            if (i > 0) {
+                u = "</dl></li>";
+            }
+            if (item['lev'] == 0) {
+                temp.push(u + '<li class="layui-nav-item"><a  class="" href="javascript:;">' + item.menuUrl + '</a><dl class="layui-nav-child">');
+            } else {
+                temp.push('<dd><a href="javascript:;">' + item.menuUrl + '</a></dd>')
+            }
+            if (i + 1 == tree.length) {
+                temp.push("</dl></li>")
+            }
+        }
+
+        let htmlText = '<ul class="layui-nav layui-nav-tree" lay-filter="test">';
+        htmlText = htmlText + '<li class="layui-nav-item"><a href="">后台首页</a></li>';
+        for (let i = 0; i < temp.length; i++) {
+            htmlText = htmlText + temp[i];
+        }
+        htmlText = htmlText + '</ul>';
+        $('div [class="layui-side-scroll"]').html(htmlText);
+        console.log(htmlText);
+    }
+
+</script>
+
+</@shiro.authenticated>
+</body>

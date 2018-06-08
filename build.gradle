@@ -1,0 +1,125 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.1.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'maven'
+
+group = 'com.chieftain'
+version = '0.1'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+/*
+  申明变量 如果变量为空 取默认 dev
+  编译时带参数 -Denv=dev 或 -Denv=pro 来选择依赖文件为 depends-dev.gradle 或 depends-pro.gradle
+ */
+def env = System.getProperty("env") ?: "dev"
+/*
+  根据变量取配置文件
+ */
+apply from: "depends-${env}.gradle"
+
+repositories {
+    mavenCentral()
+}
+
+/*
+ 这个块可以集中申明变量
+ */
+ext {
+    println("@##### choosed depends file is depends-${env}")
+}
+
+/*
+ 指定配置
+ */
+configurations {
+    providedRuntime
+    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
+
+dependencies {
+
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'junite[Gradle Quickstart]', 'Implementation-Version': version
+    }
+}
+
+javadoc {
+    options {
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        links "http://docs.oracle.com/javase/7/docs/api"
+    }
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.groupId = project.group
+            pom.version = project.version
+            pom.artifactId = project.name
+            pom.project {
+
+                name project.name
+                packaging 'jar'
+                description 'java web快速开发'
+
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution '开源java web快速开发'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'chieftain'
+                        name 'Baiping Yuan'
+                    }
+                }
+            }
+
+            repository(url: "http://192.168.145.170:8081/nexus/content/repositories/releases/") {
+                authentication(userName: "admin", password: "admin123")
+            }
+        }
+    }
+}

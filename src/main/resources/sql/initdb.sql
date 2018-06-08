@@ -1,0 +1,96 @@
+/*!40101 SET NAMES utf8 */;
+
+/*!40101 SET SQL_MODE=''*/;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`junite` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+DROP TABLE IF EXISTS `sys_user`;
+CREATE TABLE `sys_user` (
+  `id` VARCHAR(36) NOT NULL,
+  `loginName` VARCHAR(64) DEFAULT NULL COMMENT '用户名',
+  `password` VARCHAR(64) DEFAULT NULL COMMENT '密码',
+  `userName` VARCHAR(64) DEFAULT NULL COMMENT '真实名字',
+  `userType` INT(11) DEFAULT '0' COMMENT '0普通用户，1系统管理员(超级用户)',
+  `userState` INT(11) DEFAULT '0' COMMENT '用户状态：0：创建未认证（比如没有激活，没有输入验证码等） 等待验证的用户，1：正常状态，2：用户被锁定。3：删除',
+  `mobile` VARCHAR(32) DEFAULT NULL COMMENT '手机号码',
+  `email` VARCHAR(100) DEFAULT NULL COMMENT '邮箱',
+  `loginCount` INT(11) DEFAULT '0' COMMENT '登录次数',
+  `updater` VARCHAR(36) DEFAULT NULL COMMENT '编辑者',
+  `lastLoginDate` DATETIME DEFAULT NULL COMMENT '最近登录时间',
+  `passUpdateTime` DATETIME DEFAULT NULL COMMENT '用户密码修改时间',
+  `createTime` DATETIME DEFAULT NULL COMMENT '创建时间',
+  `updateTime` DATETIME COMMENT '修改时间',
+  `roleId` VARCHAR(100) DEFAULT NULL COMMENT '角色ID',
+  `pwd` VARCHAR(100) DEFAULT NULL COMMENT '明文',
+  `salt` VARCHAR(50) DEFAULT NULL COMMENT '加密密码盐',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='后台用户表';
+
+DROP TABLE IF EXISTS `sys_user_role`;
+CREATE TABLE `sys_user_role` (
+  `id` VARCHAR(36) NOT NULL PRIMARY KEY COMMENT '主键',
+  `userid` VARCHAR(36) NOT NULL COMMENT '用户ID',
+  `roleid` VARCHAR(36) NOT NULL COMMENT '角色ID'
+)ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='用户角色关联表';
+
+DROP TABLE IF EXISTS `sys_role`;
+CREATE TABLE `sys_role`(
+  `roleId` VARCHAR(36) NOT NULL PRIMARY KEY,
+  `roleName` VARCHAR(64) NOT NULL COMMENT '角色名',
+  `flag` INT DEFAULT 0 COMMENT '0 正常，1 禁用',
+  `menuId` VARCHAR(100) DEFAULT NULL COMMENT '权限ID',
+  `roleContent` TEXT DEFAULT NULL COMMENT '描述',
+  `updater` VARCHAR(36) DEFAULT NULL COMMENT '编辑人',
+  `updateTime` DATETIME COMMENT '修改时间',
+  `createTime` DATETIME COMMENT '创建时间'
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='后台角色权限表';
+
+DROP TABLE IF EXISTS `sys_role_permission`;
+CREATE TABLE `sys_role_permission` (
+  `id` VARCHAR(36) NOT NULL PRIMARY KEY COMMENT '主键',
+  `roleid` VARCHAR(36) NOT NULL COMMENT '角色ID',
+  `menuid` VARCHAR(36) NOT NULL COMMENT '资源ID'
+)ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='角色资源关联表';
+
+DROP TABLE IF EXISTS `sys_permission`;
+CREATE TABLE `sys_permission`(
+  `menuId` VARCHAR(36) NOT NULL PRIMARY KEY,
+  `menuName` VARCHAR(100) NOT NULL COMMENT '栏目名',
+  `type` VARCHAR(50) NOT NULL COMMENT '类型 0.菜单 1.按钮',
+  `permission` VARCHAR(50) DEFAULT NULL COMMENT '权限标识',
+  `parentId` VARCHAR(36) DEFAULT NULL COMMENT '权限类型（所属父级，0本身）',
+  `parentIds` VARCHAR(360) DEFAULT NULL COMMENT '所有父级',
+  `menuUrl` VARCHAR(200) NOT NULL COMMENT '链接地址',
+  `menuNodeType` INT(11) DEFAULT 0 COMMENT '权限节点类型(1代表导航（父），2代表一级菜单，3代表二级菜单)',
+  `menuState` INT(11) DEFAULT 0 COMMENT '状态 0 显示 1 禁用',
+  `sort` INT DEFAULT 0 COMMENT '排序',
+  `icon` VARCHAR(100) DEFAULT NULL COMMENT '图标',
+  `updater` VARCHAR(36) DEFAULT NULL COMMENT '编辑人',
+  `updateTime` DATETIME COMMENT '修改时间',
+  `createTime` DATETIME COMMENT '创建时间'
+) ENGINE=INNODB  DEFAULT CHARSET=utf8 COMMENT='后台菜单栏表';
+
+DROP TABLE IF EXISTS `sys_user_dept`;
+CREATE TABLE `sys_user_dept` (
+  `id` VARCHAR(36) NOT NULL PRIMARY KEY COMMENT '主键',
+  `userid` VARCHAR(36) NOT NULL COMMENT '用户ID',
+  `deptid` VARCHAR(36) NOT NULL COMMENT '部门ID'
+)ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='用户部门关联表';
+
+DROP TABLE IF EXISTS `sys_dept`;
+CREATE TABLE `sys_dept` (
+  `id` VARCHAR(36) NOT NULL,
+  `name` VARCHAR(30) DEFAULT NULL COMMENT '名称',
+  `name_en` VARCHAR(50) DEFAULT NULL COMMENT '英文',
+  `bianma` VARCHAR(50) DEFAULT NULL COMMENT '编码',
+  `parent_id` VARCHAR(100) DEFAULT NULL COMMENT '上级ID',
+  `bz` VARCHAR(255) DEFAULT NULL COMMENT '备注',
+  `headman` VARCHAR(30) DEFAULT NULL COMMENT '负责人',
+  `tel` VARCHAR(50) DEFAULT NULL COMMENT '电话',
+  `functions` VARCHAR(255) DEFAULT NULL COMMENT '部门职能',
+  `address` VARCHAR(255) DEFAULT NULL COMMENT '地址',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;

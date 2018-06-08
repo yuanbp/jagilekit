@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>JAgileKit 快速开发平台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" href="/static/images/java.ico"/>
+
+    <link rel="stylesheet" href="/static/toast/css/toast.style.min.css">
+
+<#include "common/common-style.ftl" />
+</head>
+<body class=layui-layout-body">
+<#--<@shiro.hasPermission name="admin:add"></@shiro.hasPermission>-->
+<#--<@shiro.hasRole name="basic"></@shiro.hasRole>-->
+<@shiro.authenticated>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">JAgileKit 快速开发平台</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">其它功能</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">邮件管理</a></dd>
+                    <dd><a href="">消息管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <span id="userInfoSp">${loginName}</span> [用户信息]
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="/doLogout">注销</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 顶部切换卡 -->
+        <div class="layui-tab layui-tab-brief" lay-filter="top-tab" lay-allowClose="true" style="margin: 0;">
+            <ul class="layui-tab-title"></ul>
+            <div class="layui-tab-content" style="padding: 0;"></div>
+        </div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>
+
+    <#include "common/common-script.ftl"/>
+<script type="text/javascript" src="/static/toast/js/toast.script.js"></script>
+<script type="text/javascript" src="/static/toast/js/notification.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use(['layer', 'jquery', 'form', 'element'], function () {
+        let $ = layui.jquery
+                , form = layui.form
+                , layer = layui.layer
+                , element = layui.element;
+
+        $(() => {
+            $.ajax({
+                url: '/userInfo',
+                type: 'post',
+                data: {'param': 'none'},
+                dataType: 'json',
+                success: (data) => {
+                    let jsonObj = JSON.parse(data);
+                    let jsonStr = JSON.stringify(jsonObj);
+                    $('#userInfoSp').text(jsonObj.loginName);
+                },
+                error: (jqXHR, textStatus, errorThrown) => {
+                    layer.alert('获取登陆用户名异常.', {
+                        skin: 'layui-layer-lan',
+                        icon: 5
+                        , closeBtn: 0
+                        , anim: 6
+                    });
+                }
+            });
+
+            $.ajax({
+                url: '/findMenuByLogined',
+                type: 'post',
+                data: {'param': 'none'},
+                dataType: 'json',
+                success: (data) => {
+                    element.init();
+                    let jsonObj = JSON.parse(data);
+                    let jsonStr = JSON.stringify(jsonObj);
+                    let menuTree = makeMenuTree(jsonObj);
+                    $(menuTree).removeAttr('class');
+                    $(menuTree).removeAttr('lay-filter');
+                    $(menuTree).attr('class','layui-nav layui-nav-tree');
+                    $(menuTree).attr('lay-filter','menu');
+                    $('div [class="layui-side-scroll"]').append(menuTree);
+                    element.render();
+                },
+                error: (jqXHR, textStatus, errorThrown) => {
+                    layer.alert('获取带单数据异常.', {
+                        skin: 'layui-layer-lan',
+                        icon: 5
+                        , closeBtn: 0
+                        , anim: 6
+                    });
+                }
+            });
+
+        });
+
+        element.on('nav(menu)', function (elem) {
+
+        });
+
+        //根据最后一个找到整个家族
+        function familyTree(arr, pid) {
+            var temp = [];
+            var forFn = function (arr, pid) {
+                for (var i = 0; i < arr.length; i++) {
+                    var item = arr[i];
+                    if (item.menuid == pid) {
+                        temp.push(item);
+                        forFn(arr, item.parentids);
+                    }
+                }
+            };
+            forFn(arr, pid);
+            return temp;
+        }
+
+        //子孙树，从顶级往下找到是有的子子孙孙
+        function sonsTree(arr, id) {
+            var temp = [], level = '0';
+            var forFn = function (arr, id, level) {
+                for (var i = 0; i < arr.length; i++) {
+                    var item = arr[i];
+                    if (item.parentids == id) {
+                        temp.push(item);
+                        forFn(arr, item.menuid, item.level);
+                    }
+                }
+            };
+            forFn(arr, id, level);
+            return temp;
+        }
+
+        function createMenu(data) {
+            var tree = sonsTree(data, 0);
+            var temp = [];
+            for (var i = 0; i < tree.length; i++) {
+                var item = tree[i], u = "";
+                if (i > 0) {
+                    u = "</ul></li></ul></li>";
+                }
+                if (item['level'] == '0' && item['parentids'] == '0') {
+                    temp.push(u + '<li class="layui-nav-item"><a href="javascript:;">' + item.menuname + '</a><ul class="layui-nav-child">');
+                } else if (item['level'] == '0' && item['parentids'] != '0') {
+                    temp.push('<li><a href="javascript:;">' + item.menuname + '</a><ul class="layui-nav-child">');
+                } else {
+                    temp.push('<li><a href="javascript:;" data-url="' + item.menuurl + '" data-id="' + item.menuid + '" tab-item lay-filter="menu-item">' + item.menuname + '</a></li>')
+                }
+                if (i + 1 == tree.length) {
+                    temp.push("</ul></li>")
+                }
+            }
+
+            let htmlText = '';
+            for (let i = 0; i < temp.length; i++) {
+                htmlText = htmlText + temp[i];
+            }
+            console.log(htmlText);
+            let htmlhead = '<ul class="layui-nav layui-nav-tree layui-inline" lay-filter="menu" style="margin-right: 10px;"><li class="layui-nav-item"><a href="javascript:;">后台首页</a></li>';
+            let htmlfoot = '</ul>';
+            htmlText = htmlhead + htmlText + htmlfoot;
+            $('div [class="layui-side-scroll"]').html(htmlText);
+            console.log(htmlText);
+        }
+
+        function makeMenuTree(roots) {
+            function makeNode(node) {
+                let $a = $("<a>").text(node.menuname || "");
+                $a.attr('href','javascript:;');
+                if(node.level != '0'){
+                    $a.attr('data-url',node.menuurl);
+                    $a.attr('data-id',node.menuid);
+                    $a.attr('tab-item','');
+                    $a.attr('lay-filter','menu-item');
+                }
+                let $li = $("<li>").append($a);
+                if(node.level == 0){
+                    $li.attr('class','layui-nav-item');
+                }
+                if (node.nodes && node.nodes.length) {
+                    $li.append(makeNodeList(node.nodes));
+                }
+                return $li;
+            }
+            function makeNodeList(nodes) {
+                let maxUl = $("<ul>");
+                maxUl.attr('class','layui-nav-child');
+                return nodes
+                        .map(child => makeNode(child))
+                        .reduce(($ul, $li) => {
+                            return $ul.append($li);
+                        }, $("<ul>"));
+            }
+            return makeNodeList(roots);
+        }
+
+        function makeTree(roots) {
+            function makeNode(node) {
+                const $div = $("<a>").text(node.menuname || "");
+                const $li = $("<li>").append($div);
+                if (node.nodes && node.nodes.length) {
+                    $li.append(makeNodeList(node.nodes));
+                }
+                return $li;
+            }
+            function makeNodeList(nodes) {
+                return nodes
+                        .map(child => makeNode(child))
+                        .reduce(($ul, $li) => {
+                            return $ul.append($li);
+                        }, $("<ul>"));
+            }
+            return makeNodeList(roots);
+        }
+
+        // iframe切换动画
+        function ani(id) {
+            $("[iframe-id=" + id + "]").hide();
+            $("[iframe-id=" + id + "]").fadeIn(127);
+        }
+
+        var tabfilter = 'top-tab';
+        var tab = $('.layui-tab[lay-filter=' + tabfilter + ']').eq(0);
+        var tabcontent = tab.children('.layui-tab-content').eq(0);
+        var tabtitle = tab.children('.layui-tab-title').eq(0);
+
+        /**
+         * iframe自适应
+         */
+        $(window).resize(function () {
+            //设置顶部切换卡容器度
+            tabcontent.height($(this).height() - 60 - 41 - 44); //头部高度 顶部切换卡高度 底部高度
+            //设置顶部切换卡容器内每个iframe高度
+            tabcontent.find('iframe').each(function () {
+                $(this).height(tabcontent.height());
+            });
+        }).resize();
+
+        // 监听Tab切换，以改变地址hash值
+        element.on('tab(' + tabfilter + ')', function () {
+            try {
+                var id = this.getAttribute('lay-id');
+            } catch (e) {
+                var id = null;
+            }
+            if (id != null) {
+                location.hash = tabfilter + '=' + id;
+                ani(id);
+            }
+        });
+
+        element.on('nav(menu)', (elem) => {
+//            alert(elem.parent().prop("tagName"));
+        })
+
+        // 点击左侧链接的时候
+        $('[tab-item]').bind('click', function () {
+            var id = $(this).attr('data-id');
+            var title = $(this).text();
+            var url = $(this).attr('data-url');
+
+            var iframes = $("[lay-id=" + id + "]").length;
+            if (iframes == 0) {
+                // 不存在的情况
+                var iframe = '<iframe';
+                iframe += ' src="' + url + '" iframe-id="' + id + '"';
+                iframe += ' style="width: 100%; height: ' + tabcontent.height() + 'px; border: 0px;"';
+                iframe += '></iframe>';
+                //顶部切换卡新增一个卡片
+                element.tabAdd(tabfilter, {'title': title, 'content': iframe, 'id': id});
+                ani(id);
+            }
+            // 添加记录
+            location.hash = tabfilter + '=' + id;
+            // 改变tab
+            element.tabChange(tabfilter, id);
+        });
+
+        // 顶部导航选择时
+        $('[top-bar]').bind('click', function () {
+            var id = $(this).attr('top-id');
+            var lefts = $("[left-bar][left-id='" + id + "']").length;
+            if (lefts != 0) {
+                // top-bar有对应的left-bar的情况下
+                $("[left-bar]").hide();
+                $("[left-bar][left-id='" + id + "']").fadeIn(500);
+            }
+        });
+
+        /**
+         * 初始化点击侧边栏导航
+         */
+        var layid = location.hash.replace(/^#top-tab=/, '');
+        // layui-this
+        if (layid) {
+            $('.layui-side-scroll').find('[data-id=' + layid + ']').eq(0).click();    // 根据传入的ID跳转
+        } else {
+            $('.layui-side-scroll').find('[data-url][data-id]').eq(0).click();    // 点击第一个
+        }
+
+    });
+
+</script>
+
+</@shiro.authenticated>
+</body>

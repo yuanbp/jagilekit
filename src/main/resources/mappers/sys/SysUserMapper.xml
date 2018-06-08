@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chieftain.agile.dao.sys.SysUserMapper">
+    <resultMap id="BaseResultMap" type="com.chieftain.agile.entity.sys.SysUser">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="loginName" property="loginname" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="userName" property="username" jdbcType="VARCHAR"/>
+        <result column="userType" property="usertype" jdbcType="INTEGER"/>
+        <result column="userState" property="userstate" jdbcType="INTEGER"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="loginCount" property="logincount" jdbcType="INTEGER"/>
+        <result column="updater" property="updater" jdbcType="VARCHAR"/>
+        <result column="lastLoginDate" property="lastlogindate" jdbcType="TIMESTAMP"/>
+        <result column="passUpdateTime" property="passupdatetime" jdbcType="TIMESTAMP"/>
+        <result column="createTime" property="createtime" jdbcType="TIMESTAMP"/>
+        <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+        <result column="roleId" property="roleid" jdbcType="VARCHAR"/>
+        <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
+        <result column="salt" property="salt" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, loginName, password, userName, userType, userState, mobile, email, loginCount, 
+    updater, lastLoginDate, passUpdateTime, createTime, updateTime, roleId, pwd, salt
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sys_user
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.chieftain.agile.entity.sys.SysUser">
+    insert into sys_user (id, loginName, password, 
+      userName, userType, userState, 
+      mobile, email, loginCount, 
+      updater, lastLoginDate, passUpdateTime, 
+      createTime, updateTime, roleId, 
+      pwd, salt)
+    values (#{id,jdbcType=VARCHAR}, #{loginname,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{username,jdbcType=VARCHAR}, #{usertype,jdbcType=INTEGER}, #{userstate,jdbcType=INTEGER}, 
+      #{mobile,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{logincount,jdbcType=INTEGER}, 
+      #{updater,jdbcType=VARCHAR}, #{lastlogindate,jdbcType=TIMESTAMP}, #{passupdatetime,jdbcType=TIMESTAMP}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{roleid,jdbcType=VARCHAR}, 
+      #{pwd,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.chieftain.agile.entity.sys.SysUser">
+        insert into sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="loginname != null">
+                loginName,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="username != null">
+                userName,
+            </if>
+            <if test="usertype != null">
+                userType,
+            </if>
+            <if test="userstate != null">
+                userState,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="logincount != null">
+                loginCount,
+            </if>
+            <if test="updater != null">
+                updater,
+            </if>
+            <if test="lastlogindate != null">
+                lastLoginDate,
+            </if>
+            <if test="passupdatetime != null">
+                passUpdateTime,
+            </if>
+            <if test="createtime != null">
+                createTime,
+            </if>
+            <if test="updatetime != null">
+                updateTime,
+            </if>
+            <if test="roleid != null">
+                roleId,
+            </if>
+            <if test="pwd != null">
+                pwd,
+            </if>
+            <if test="salt != null">
+                salt,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="loginname != null">
+                #{loginname,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="usertype != null">
+                #{usertype,jdbcType=INTEGER},
+            </if>
+            <if test="userstate != null">
+                #{userstate,jdbcType=INTEGER},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="logincount != null">
+                #{logincount,jdbcType=INTEGER},
+            </if>
+            <if test="updater != null">
+                #{updater,jdbcType=VARCHAR},
+            </if>
+            <if test="lastlogindate != null">
+                #{lastlogindate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="passupdatetime != null">
+                #{passupdatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatetime != null">
+                #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="roleid != null">
+                #{roleid,jdbcType=VARCHAR},
+            </if>
+            <if test="pwd != null">
+                #{pwd,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                #{salt,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.chieftain.agile.entity.sys.SysUser">
+        update sys_user
+        <set>
+            <if test="loginname != null">
+                loginName = #{loginname,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                userName = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="usertype != null">
+                userType = #{usertype,jdbcType=INTEGER},
+            </if>
+            <if test="userstate != null">
+                userState = #{userstate,jdbcType=INTEGER},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="logincount != null">
+                loginCount = #{logincount,jdbcType=INTEGER},
+            </if>
+            <if test="updater != null">
+                updater = #{updater,jdbcType=VARCHAR},
+            </if>
+            <if test="lastlogindate != null">
+                lastLoginDate = #{lastlogindate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="passupdatetime != null">
+                passUpdateTime = #{passupdatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createtime != null">
+                createTime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatetime != null">
+                updateTime = #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="roleid != null">
+                roleId = #{roleid,jdbcType=VARCHAR},
+            </if>
+            <if test="pwd != null">
+                pwd = #{pwd,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                salt = #{salt,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.chieftain.agile.entity.sys.SysUser">
+    update sys_user
+    set loginName = #{loginname,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      userName = #{username,jdbcType=VARCHAR},
+      userType = #{usertype,jdbcType=INTEGER},
+      userState = #{userstate,jdbcType=INTEGER},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      loginCount = #{logincount,jdbcType=INTEGER},
+      updater = #{updater,jdbcType=VARCHAR},
+      lastLoginDate = #{lastlogindate,jdbcType=TIMESTAMP},
+      passUpdateTime = #{passupdatetime,jdbcType=TIMESTAMP},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      roleId = #{roleid,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+    <select id="findByLogin" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user where 1=1
+        <if test="username != null and username != ''">
+            and (loginName = #{username, jdbcType=VARCHAR} or mobile = #{username, jdbcType=VARCHAR} or email = #{username, jdbcType=VARCHAR})
+        </if>
+        limit 0,1
+    </select>
+
+    <select id="findLoginRoles" parameterType="java.lang.String" resultType="java.lang.String">
+        select roleName from sys_role where roleid in (select roleid from sys_user_role where 1=1 and
+        userid=(
+        select id from sys_user where 1=1
+        <if test="username != null and username != ''">
+            and (loginName = #{username, jdbcType=VARCHAR} or mobile = #{username, jdbcType=VARCHAR} or email = #{username, jdbcType=VARCHAR})
+        </if>
+        limit 0,1)
+        )
+    </select>
+
+    <select id="findLoginPermissions" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT permission FROM sys_permission WHERE menuid IN (select menuid from sys_role_permission where roleid in (select roleid from sys_user_role where 1=1 and
+        userid=(
+        select id from sys_user where 1=1
+        <if test="username != null and username != ''">
+            and (loginName = #{username, jdbcType=VARCHAR} or mobile = #{username, jdbcType=VARCHAR} or email = #{username, jdbcType=VARCHAR})
+        </if>
+        limit 0,1)
+        ))
+    </select>
+
+    <select id="findNameLogin" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user where 1=1 and userState = '1'
+        <if test="loginName != null and loginName != ''">
+            and loginName = #{loginName, jdbcType=VARCHAR}
+        </if>
+        limit 0,1
+    </select>
+
+    <select id="findLoginRolesByName" parameterType="java.lang.String" resultType="java.lang.String">
+        select roleName from sys_role where roleid in (select roleid from sys_user_role where 1=1 and
+        userid=(
+        select id from sys_user where 1=1 and userState = '1'
+        <if test="loginName != null and loginName != ''">
+            and loginName = #{loginName, jdbcType=VARCHAR}
+        </if>
+        limit 0,1)
+        )
+    </select>
+
+    <select id="findLoginPermissionsByName" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT permission FROM sys_permission WHERE menuid IN (select menuid from sys_role_permission where roleid in (select roleid from sys_user_role where 1=1 and
+        userid=(
+        select id from sys_user where 1=1 and userState = '1'
+        <if test="loginName != null and loginName != ''">
+            and loginName = #{loginName, jdbcType=VARCHAR}
+        </if>
+        limit 0,1)
+        ))
+    </select>
+
+    <select id="findEmailLogin" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user where 1=1 and userState = '1'
+        <if test="email != null and email != ''">
+            and email = #{email, jdbcType=VARCHAR}
+        </if>
+        limit 0,1
+    </select>
+
+    <select id="findLoginRolesByEmail" parameterType="java.lang.String" resultType="java.lang.String">
+        select roleName from sys_role where roleid in (select roleid from sys_user_role where 1=1 and
+        userid=(
+        select id from sys_user where 1=1 and userState = '1'
+        <if test="email != null and email != ''">
+            and email = #{email, jdbcType=VARCHAR}
+        </if>
+        limit 0,1)
+        )
+    </select>
+
+    <select id="findLoginPermissionsByEmail" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT permission FROM sys_permission WHERE menuid IN (select menuid from sys_role_permission where roleid in (select roleid from sys_user_role where 1=1 and
+        userid=(
+        select id from sys_user where 1=1 and userState = '1'
+        <if test="email != null and email != ''">
+            and email = #{email, jdbcType=VARCHAR}
+        </if>
+        limit 0,1)
+        ))
+    </select>
+
+    <select id="findMobileLogin" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user where 1=1 and userState = '1'
+        <if test="mobile != null and mobile != ''">
+            and mobile = #{mobile, jdbcType=VARCHAR}
+        </if>
+        limit 0,1
+    </select>
+
+    <select id="findLoginRolesByMobile" parameterType="java.lang.String" resultType="java.lang.String">
+        select roleName from sys_role where roleid in (select roleid from sys_user_role where 1=1 and
+        userid=(
+        select id from sys_user where 1=1 and userState = '1'
+        <if test="mobile != null and mobile != ''">
+            and mobile = #{mobile, jdbcType=VARCHAR}
+        </if>
+        limit 0,1)
+        )
+    </select>
+
+    <select id="findLoginPermissionsByMobile" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT permission FROM sys_permission WHERE menuid IN (select menuid from sys_role_permission where roleid in (select roleid from sys_user_role where 1=1 and
+        userid=(
+        select id from sys_user where 1=1 and userState = '1'
+        <if test="mobile != null and mobile != ''">
+            and mobile = #{mobile, jdbcType=VARCHAR}
+        </if>
+        limit 0,1)
+        ))
+    </select>
+
+    <select id="findMenuByMobile" parameterType="java.lang.String" resultType="com.chieftain.agile.entity.sys.SysPermission">
+        SELECT * FROM sys_permission WHERE 1=1 and type = '0' and menuid IN (select menuid from sys_role_permission where roleid in (select roleid from sys_user_role where 1=1 and
+        userid=(
+        select id from sys_user where 1=1 and userState = '1'
+        <if test="mobile != null and mobile != ''">
+            and mobile = #{mobile, jdbcType=VARCHAR}
+        </if>
+        limit 0,1)
+        ))
+    </select>
+
+    <select id="findMenuByEmail" parameterType="java.lang.String" resultType="com.chieftain.agile.entity.sys.SysPermission">
+        SELECT * FROM sys_permission WHERE 1=1 and type = '0' and menuid IN (select menuid from sys_role_permission where roleid in (select roleid from sys_user_role where 1=1 and
+        userid=(
+        select id from sys_user where 1=1 and userState = '1'
+        <if test="email != null and email != ''">
+            and email = #{email, jdbcType=VARCHAR}
+        </if>
+        limit 0,1)
+        ))
+    </select>
+
+    <select id="findMenuByName" parameterType="java.lang.String" resultType="com.chieftain.agile.entity.sys.SysPermission">
+        SELECT * FROM sys_permission WHERE 1=1 and type = '0' and menuid IN (select menuid from sys_role_permission where roleid in (select roleid from sys_user_role where 1=1 and
+        userid=(
+        select id from sys_user where 1=1 and userState = '1'
+        <if test="loginName != null and loginName != ''">
+            and loginName = #{loginName, jdbcType=VARCHAR}
+        </if>
+        limit 0,1)
+        ))
+    </select>
+</mapper>

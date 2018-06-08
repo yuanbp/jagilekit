@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache name="defaultEhcache" updateCheck="false">
+
+    <diskStore path="java.io.tmpdir"/>
+
+    <defaultCache
+            maxElementsInMemory="1000"
+            maxElementsOnDisk="10000"
+            eternal="false"
+            timeToIdleSeconds="300"
+            timeToLiveSeconds="600"
+            overflowToDisk="true"
+            diskPersistent="false"
+            diskSpoolBufferSizeMB="500"
+            memoryStoreEvictionPolicy="LRU"
+    />
+
+    <!-- 登录记录缓存 锁定 5 分钟 -->
+    <cache name="passwordRetryCache"
+           maxElementsInMemory="1000"
+           maxElementsOnDisk="10000"
+           eternal="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="300"
+           overflowToDisk="true"
+           diskPersistent="false"
+           diskSpoolBufferSizeMB="500"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <cache name="authorizationCache"
+           maxElementsInMemory="1000"
+           maxElementsOnDisk="10000"
+           eternal="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           overflowToDisk="true"
+           diskPersistent="false"
+           diskSpoolBufferSizeMB="500"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <cache name="authenticationCache"
+           maxElementsInMemory="1000"
+           maxElementsOnDisk="10000"
+           eternal="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           overflowToDisk="true"
+           diskPersistent="false"
+           diskSpoolBufferSizeMB="500"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <cache name="shiro-activeSessionCache"
+           maxElementsInMemory="1000"
+           maxElementsOnDisk="10000"
+           eternal="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           overflowToDisk="true"
+           diskPersistent="false"
+           diskSpoolBufferSizeMB="500"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+</ehcache>
