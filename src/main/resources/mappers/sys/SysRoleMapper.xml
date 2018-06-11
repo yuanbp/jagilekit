@@ -142,4 +142,8 @@
       createTime = #{createtime,jdbcType=TIMESTAMP}
     where roleId = #{roleid,jdbcType=VARCHAR}
   </update>
+    
+    <select id="findRoleList" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT ROLEID,ROLENAME,ROLECONTENT FROM SYS_ROLE WHERE 1=1
+    </select>
 </mapper>
