@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.chieftain.agile.dao.sys.SysRoleMapper" >
-  <resultMap id="BaseResultMap" type="com.chieftain.agile.entity.sys.SysRole" >
-    <id column="roleId" property="roleid" jdbcType="VARCHAR" />
-    <result column="roleName" property="rolename" jdbcType="VARCHAR" />
-    <result column="flag" property="flag" jdbcType="INTEGER" />
-    <result column="menuId" property="menuid" jdbcType="VARCHAR" />
-    <result column="updater" property="updater" jdbcType="VARCHAR" />
-    <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
-    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
-  </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.chieftain.agile.entity.sys.SysRole" extends="BaseResultMap" >
-    <result column="roleContent" property="rolecontent" jdbcType="LONGVARCHAR" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.chieftain.agile.dao.sys.SysRoleMapper">
+    <resultMap id="BaseResultMap" type="com.chieftain.agile.entity.sys.SysRole">
+        <id column="roleId" property="roleid" jdbcType="VARCHAR"/>
+        <result column="roleName" property="rolename" jdbcType="VARCHAR"/>
+        <result column="flag" property="flag" jdbcType="INTEGER"/>
+        <result column="menuId" property="menuid" jdbcType="VARCHAR"/>
+        <result column="updater" property="updater" jdbcType="VARCHAR"/>
+        <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+        <result column="createTime" property="createtime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.chieftain.agile.entity.sys.SysRole" extends="BaseResultMap">
+        <result column="roleContent" property="rolecontent" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     roleId, roleName, flag, menuId, updater, updateTime, createTime
   </sql>
-  <sql id="Blob_Column_List" >
+    <sql id="Blob_Column_List">
     roleContent
   </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from sys_role
-    where roleId = #{roleid,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from sys_role
+        where roleId = #{roleid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from sys_role
     where roleId = #{roleid,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.chieftain.agile.entity.sys.SysRole" >
+    <insert id="insert" parameterType="com.chieftain.agile.entity.sys.SysRole">
     insert into sys_role (roleId, roleName, flag, 
       menuId, updater, updateTime, 
       createTime, roleContent)
@@ -39,89 +39,89 @@
       #{menuid,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{updatetime,jdbcType=TIMESTAMP}, 
       #{createtime,jdbcType=TIMESTAMP}, #{rolecontent,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.chieftain.agile.entity.sys.SysRole" >
-    insert into sys_role
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="roleid != null" >
-        roleId,
-      </if>
-      <if test="rolename != null" >
-        roleName,
-      </if>
-      <if test="flag != null" >
-        flag,
-      </if>
-      <if test="menuid != null" >
-        menuId,
-      </if>
-      <if test="updater != null" >
-        updater,
-      </if>
-      <if test="updatetime != null" >
-        updateTime,
-      </if>
-      <if test="createtime != null" >
-        createTime,
-      </if>
-      <if test="rolecontent != null" >
-        roleContent,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="roleid != null" >
-        #{roleid,jdbcType=VARCHAR},
-      </if>
-      <if test="rolename != null" >
-        #{rolename,jdbcType=VARCHAR},
-      </if>
-      <if test="flag != null" >
-        #{flag,jdbcType=INTEGER},
-      </if>
-      <if test="menuid != null" >
-        #{menuid,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null" >
-        #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="updatetime != null" >
-        #{updatetime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createtime != null" >
-        #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="rolecontent != null" >
-        #{rolecontent,jdbcType=LONGVARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.chieftain.agile.entity.sys.SysRole" >
-    update sys_role
-    <set >
-      <if test="rolename != null" >
-        roleName = #{rolename,jdbcType=VARCHAR},
-      </if>
-      <if test="flag != null" >
-        flag = #{flag,jdbcType=INTEGER},
-      </if>
-      <if test="menuid != null" >
-        menuId = #{menuid,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null" >
-        updater = #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="updatetime != null" >
-        updateTime = #{updatetime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createtime != null" >
-        createTime = #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="rolecontent != null" >
-        roleContent = #{rolecontent,jdbcType=LONGVARCHAR},
-      </if>
-    </set>
-    where roleId = #{roleid,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.chieftain.agile.entity.sys.SysRole" >
+    <insert id="insertSelective" parameterType="com.chieftain.agile.entity.sys.SysRole">
+        insert into sys_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roleid != null">
+                roleId,
+            </if>
+            <if test="rolename != null">
+                roleName,
+            </if>
+            <if test="flag != null">
+                flag,
+            </if>
+            <if test="menuid != null">
+                menuId,
+            </if>
+            <if test="updater != null">
+                updater,
+            </if>
+            <if test="updatetime != null">
+                updateTime,
+            </if>
+            <if test="createtime != null">
+                createTime,
+            </if>
+            <if test="rolecontent != null">
+                roleContent,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roleid != null">
+                #{roleid,jdbcType=VARCHAR},
+            </if>
+            <if test="rolename != null">
+                #{rolename,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null">
+                #{flag,jdbcType=INTEGER},
+            </if>
+            <if test="menuid != null">
+                #{menuid,jdbcType=VARCHAR},
+            </if>
+            <if test="updater != null">
+                #{updater,jdbcType=VARCHAR},
+            </if>
+            <if test="updatetime != null">
+                #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="rolecontent != null">
+                #{rolecontent,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.chieftain.agile.entity.sys.SysRole">
+        update sys_role
+        <set>
+            <if test="rolename != null">
+                roleName = #{rolename,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null">
+                flag = #{flag,jdbcType=INTEGER},
+            </if>
+            <if test="menuid != null">
+                menuId = #{menuid,jdbcType=VARCHAR},
+            </if>
+            <if test="updater != null">
+                updater = #{updater,jdbcType=VARCHAR},
+            </if>
+            <if test="updatetime != null">
+                updateTime = #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createtime != null">
+                createTime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="rolecontent != null">
+                roleContent = #{rolecontent,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where roleId = #{roleid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.chieftain.agile.entity.sys.SysRole">
     update sys_role
     set roleName = #{rolename,jdbcType=VARCHAR},
       flag = #{flag,jdbcType=INTEGER},
@@ -132,7 +132,7 @@
       roleContent = #{rolecontent,jdbcType=LONGVARCHAR}
     where roleId = #{roleid,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.chieftain.agile.entity.sys.SysRole" >
+    <update id="updateByPrimaryKey" parameterType="com.chieftain.agile.entity.sys.SysRole">
     update sys_role
     set roleName = #{rolename,jdbcType=VARCHAR},
       flag = #{flag,jdbcType=INTEGER},
@@ -142,7 +142,7 @@
       createTime = #{createtime,jdbcType=TIMESTAMP}
     where roleId = #{roleid,jdbcType=VARCHAR}
   </update>
-    
+
     <select id="findRoleList" parameterType="java.util.Map" resultMap="BaseResultMap">
         SELECT ROLEID,ROLENAME,ROLECONTENT FROM SYS_ROLE WHERE 1=1
     </select>

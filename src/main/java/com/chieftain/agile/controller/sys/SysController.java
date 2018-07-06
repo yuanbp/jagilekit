@@ -2,6 +2,7 @@ package com.chieftain.agile.controller.sys;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.util.Date;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -9,6 +10,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -24,7 +26,10 @@ import com.chieftain.agile.common.auth.CustomizeShiroRealm;
 import com.chieftain.agile.common.auth.Principal;
 import com.chieftain.agile.common.auth.PrincipalUtil;
 import com.chieftain.agile.common.cache.api.JedisClient;
+import com.chieftain.agile.entity.sys.SysUser;
 import com.chieftain.agile.service.sys.ILoginService;
+import com.chieftain.agile.service.sys.ISysUserService;
+import com.chieftain.agile.utils.ShiroMd5Util;
 import com.chieftain.agile.utils.SpringContextHolder;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 
@@ -46,6 +51,8 @@ public class SysController {
     private ILoginService emailLoginService;
     @Autowired
     private ILoginService mobileLoginService;
+    @Autowired
+    private ISysUserService userService;
 
     @Autowired
     private JedisClient jedisClient;
@@ -142,8 +149,8 @@ public class SysController {
     @RequestMapping("/doLogout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         Principal principal = PrincipalUtil.getPrincipal(SecurityUtils.getSubject().getPrincipal());
-        jedisClient.delConvert(loginTypePerffix+principal.getLoginName());
-        jedisClient.delConvert(menusPerffix+principal.getLoginName());
+        jedisClient.delConvert(loginTypePerffix + principal.getLoginName());
+        jedisClient.delConvert(menusPerffix + principal.getLoginName());
         SecurityUtils.getSubject().logout();
         return "redirect:/index";
     }
@@ -205,8 +212,89 @@ public class SysController {
     @RequiresAuthentication
     @ResponseBody
     @RequestMapping("userInfo")
-    public String getUserInfo(HttpServletRequest request,HttpServletResponse response,String param) {
+    public String getUserInfo(HttpServletRequest request, HttpServletResponse response, String param) {
         Principal principal = PrincipalUtil.getPrincipal(SecurityUtils.getSubject().getPrincipal());
         return JSONObject.toJSONString(principal);
     }
+
+    @RequestMapping("/intoRegistry")
+    public String intoRegistry(String operational, HttpServletRequest request, HttpServletResponse response) {
+        if (StringUtils.isNotBlank(operational)) {
+            if ("modify".equals(operational)) {
+                Principal principal = PrincipalUtil.getPrincipal(SecurityUtils.getSubject().getPrincipal());
+                SysUser user = userService.selectByPrimaryKey(principal.getUser().getId());
+                request.setAttribute("user", user);
+                request.setAttribute("operational",operational);
+            }
+        }
+        return "/sys/registry";
+    }
+
+    @ResponseBody
+    @RequestMapping("checkExist")
+    public String checkExist(String checkValue, String valueType) {
+        ILoginService loginService = chooseLoginMethod(valueType);
+        SysUser user = loginService.findByLogin(checkValue);
+        if (user == null) {
+            return "no";
+        } else {
+            return "yes";
+        }
+    }
+
+    @RequestMapping("/registryUser")
+    public String registryUser(SysUser user, HttpServletRequest request, HttpServletResponse response) {
+        String status = null;
+        try {
+            if(!StringUtils.isNotBlank(user.getId())){
+                this.initUser(user);
+            }else {
+                Principal principal = PrincipalUtil.getPrincipal(SecurityUtils.getSubject().getPrincipal());
+                user.setSalt(principal.getLoginName());
+                user.setPassword(ShiroMd5Util.encryMd5(user));
+            }
+            userService.updateOrInsert(user);
+            status = "success";
+        } catch (Exception e) {
+            e.printStackTrace();
+            status = "fail";
+        }
+        request.setAttribute("status", status);
+        request.setAttribute("user", user);
+        return "/sys/registry";
+    }
+
+    public void initUser(SysUser user) {
+        user.setSalt(user.getLoginname());
+        user.setPassword(ShiroMd5Util.encryMd5(user));
+        user.setUsertype(0);
+        user.setUserstate(1);
+        user.setCreatetime(new Date());
+    }
+
+    @RequestMapping(value = {"/showUserInfo"})
+    public String showUserInfo(HttpServletRequest request, HttpServletResponse response) {
+        Principal principal = PrincipalUtil.getPrincipal(SecurityUtils.getSubject().getPrincipal());
+        SysUser user = userService.selectByPrimaryKey(principal.getId());
+        request.setAttribute("user", user);
+        return "/sys/showuserinfo";
+    }
+
+    @RequestMapping(value = "confirmPwd")
+    public String confirmPwd(HttpServletRequest request, HttpServletResponse response) {
+        return "/sys/confirmPwd";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/checkPwd")
+    public String checkPwd(String pwd, HttpServletRequest request, HttpServletResponse response) {
+        Principal principal = PrincipalUtil.getPrincipal(SecurityUtils.getSubject().getPrincipal());
+        SysUser user = principal.getUser();
+        String md5Pwd = ShiroMd5Util.encryMd5(pwd, user.getLoginname());
+        if (md5Pwd.equals(user.getPassword())) {
+            return "yes";
+        }
+        return "no";
+    }
+
 }

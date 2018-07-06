@@ -1,7 +1,9 @@
 package com.chieftain.agile.service.sys.impl;
 
 import java.util.Collection;
+import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,4 +37,25 @@ public class SysUserServiceImpl implements ISysUserService {
     public Collection<String> findLoginPermissions(String username) {
         return sysUserMapper.findLoginPermissions(username);
     }
+
+    @Override
+    public int insertSelective(SysUser record) {
+        return sysUserMapper.insertSelective(record);
+    }
+
+    public int updateOrInsert(SysUser record){
+        if(StringUtils.isNotBlank(record.getId())){
+            return sysUserMapper.updateByPrimaryKeySelective(record);
+        }else {
+            record.setId(UUID.randomUUID().toString().replaceAll("-",""));
+            return sysUserMapper.insertSelective(record);
+        }
+    }
+
+    @Override
+    public SysUser selectByPrimaryKey(String id) {
+        return sysUserMapper.selectByPrimaryKey(id);
+    }
+
+
 }

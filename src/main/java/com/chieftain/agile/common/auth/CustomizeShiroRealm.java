@@ -193,6 +193,7 @@ public class CustomizeShiroRealm extends AuthorizingRealm {
             if(userStateMap.get("deleted").equals(user.getUserstate())){
                 throw new DisabledAccountException("the account is disabled.");
             }
+            String debugname = getName();
             return new SimpleAuthenticationInfo(
                     new Principal(user,false, CustomizSerializationUtils.deserialize(jedisClient.getByte(loginTypePerffix+username)).toString()),
                     user.getPassword(), ByteSource.Util.bytes(user.getSalt()), getName());

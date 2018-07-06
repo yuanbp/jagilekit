@@ -51,7 +51,8 @@
                 <input id="verify" name="verify" placeholder="验证码" type="text" lay-verify="required" class="layui-input" style="float:left; display:inline">
                 <img alt="验证码" onclick="this.src='/defaultKaptcha?d='+new Date()*1" src="/defaultKaptcha" style="float:left; display:inline; margin: 5px"/>
                 <hr class="hr15">
-                <input value="登录" id="loginButton" lay-submit lay-filter="login" style="width:100%;" type="submit">
+                <input value="登录" id="loginButton" lay-submit lay-filter="login" style="width:45%;" type="submit">
+                <input value="注册" id="registerButton" style="width:45%;margin-left: 8%;background-color: #01AAED;" type="button">
                 <input type="hidden" id="loginType" name="loginType" value="${loginType}">
             </form>
 
@@ -121,6 +122,19 @@
 
             $('#loginButton').click(() => {
 
+            });
+
+            $('#registerButton').bind('click',()=>{
+                layer.open({
+                    type: 2,
+                    skin: 'layui-layer-lan', //样式类名
+                    closeBtn: 0, //不显示关闭按钮
+                    anim: 2,
+                    shadeClose: true, //开启遮罩关闭
+                    title:'用户注册',
+                    area:['30%','70%'],
+                    content: '/intoRegistry'
+                });
             });
         });
     });

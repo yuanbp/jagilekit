@@ -40,8 +40,8 @@
                     <span id="userInfoSp">${loginName}</span> [用户信息]
                 </a>
                 <dl class="layui-nav-child">
-                    <dd><a href="">基本资料</a></dd>
-                    <dd><a href="">安全设置</a></dd>
+                    <dd><a href="javascript:showUserInfo();">基本资料</a></dd>
+                    <dd><a href="javascript:confirmPwd();">资料修改</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item"><a href="/doLogout">注销</a></li>
@@ -320,6 +320,45 @@
             })
         }
     });
+
+    function showUserInfo(){
+        layer.open({
+            type: 2,
+            skin: 'layui-layer-lan', //样式类名
+            closeBtn: 1, //不显示关闭按钮
+            anim: 2,
+            shadeClose: true, //开启遮罩关闭
+            title:'用户信息',
+            area:['30%','50%'],
+            content: '/showUserInfo'
+        });
+    }
+
+    function confirmPwd(){
+        layer.open({
+            type: 2,
+            skin: 'layui-layer-lan', //样式类名
+            closeBtn: 1, //不显示关闭按钮
+            anim: 2,
+            shadeClose: true, //开启遮罩关闭
+            title:'用户信息',
+            area:['30%','30%'],
+            content: '/confirmPwd'
+        });
+    }
+
+    function openRegistry(){
+        layer.open({
+            type: 2,
+            skin: 'layui-layer-lan', //样式类名
+            closeBtn: 1, //不显示关闭按钮
+            anim: 2,
+            shadeClose: true, //开启遮罩关闭
+            title:'资料修改',
+            area:['30%','70%'],
+            content: '/intoRegistry?operational=modify'
+        });
+    }
 
 </script>
 

@@ -17,4 +17,10 @@ public interface ISysUserService {
     Collection<String> findLoginRoles(String username);
 
     Collection<String> findLoginPermissions(String username);
+
+    int insertSelective(SysUser record);
+
+    SysUser selectByPrimaryKey(String id);
+
+    int updateOrInsert(SysUser record);
 }
