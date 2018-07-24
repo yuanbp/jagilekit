@@ -14,4 +14,6 @@ import com.chieftain.agile.entity.sys.SysPermission;
 public interface ISysMenuService {
 
     public List<SysPermission> doGetMenus(ILoginService loginService, JedisClient jedisClient, String username) throws Exception;
+
+    public List<SysPermission> findPage(String menuName,Integer pageNum,Integer pageSize);
 }

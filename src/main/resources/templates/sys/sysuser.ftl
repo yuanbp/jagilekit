@@ -11,7 +11,7 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" href="/static/images/java.ico" />
 
-    <#include "../common/common-style.ftl" />
+    <#include "common/common-style.ftl" />
 </head>
 <body>
 <div style="padding: 20px; background-color: #F2F2F2;">
@@ -45,7 +45,7 @@
     </div>
 </div>
 
-<#include "../common/common-script.ftl"/>
+<#include "common/common-script.ftl"/>
 <script>
     layui.use(['laypage', 'layer', 'jquery', 'form'], function () {
         let $ = layui.jquery

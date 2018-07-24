@@ -56,6 +56,7 @@ spring:
 #      auto_import: common/common.ftl as com
       datetime_format: yyyy-MM-dd hh:mm:ss
       classic_compatible: true
+      template_exception_handler: rethrow
   mvc:
     static-path-pattern: /static/**
   cache:

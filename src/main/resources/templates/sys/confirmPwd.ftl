@@ -1,20 +1,6 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="utf-8">
-    <title>JAgileKit 快速开发平台</title>
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="format-detection" content="telephone=no">
-    <link rel="icon" href="/static/images/java.ico"/>
+<#include "common/_layout.ftl">
 
-    <link rel="stylesheet" href="/static/toast/css/toast.style.min.css">
-    <link rel="stylesheet" href="/static/layui/css/layui.css"/>
-</head>
-<body class=layui-layout-body">
+<@layout page_tab="confirmPwd_index">
 
 <div class="layui-col-md6">
     <div class="layui-card">
@@ -35,7 +21,6 @@
     </div>
 </div>
 
-<script src="/static/layui/layui.js"></script>
 <script>
     layui.use(['layer', 'jquery', 'form', 'element'], function () {
         let $ = layui.jquery
@@ -43,7 +28,7 @@
                 , layer = layui.layer
                 , element = layui.element;
 
-        $(()=>{
+        $(() => {
             $('div .layui-form-item').attr('style', 'margin-left: 10%');
             form.verify({
                 min6: (value) => {
@@ -81,5 +66,4 @@
 
     });
 </script>
-</body>
-</html>
+</@layout>

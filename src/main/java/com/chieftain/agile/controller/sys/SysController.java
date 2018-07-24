@@ -297,4 +297,9 @@ public class SysController {
         return "no";
     }
 
+    @RequestMapping("welcome")
+    public String welcome(){
+        return "welcome";
+    }
+
 }

@@ -2,6 +2,9 @@ package com.chieftain.agile.controller.sys;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +27,7 @@ import com.chieftain.agile.utils.FastJsonTools;
  * @author Richard on 2018/5/28
  */
 @Controller
+@RequestMapping(value = "/menu")
 public class SysMenuController {
 
     @Autowired
@@ -74,5 +78,14 @@ public class SysMenuController {
                 break;
         }
         return loginService;
+    }
+
+    @RequestMapping(value = "/list")
+    public String list(HttpServletRequest request, HttpServletResponse response){
+        String menuName = request.getParameter("menuName");
+        Integer pageNum = Integer.parseInt(request.getParameter("pageNum"));
+        Integer pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        List<SysPermission> list = menuService.findPage(menuName,pageNum,pageSize);
+        return "sys/menu_list";
     }
 }

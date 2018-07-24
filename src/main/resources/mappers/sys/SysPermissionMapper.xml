@@ -209,4 +209,11 @@
       createTime = #{createtime,jdbcType=TIMESTAMP}
     where menuId = #{menuid,jdbcType=VARCHAR}
   </update>
+
+    <select id="findPage" resultMap="BaseResultMap">
+      select <include refid="Base_Column_List"/> from sys_permission where 1=1
+        <if test="menuName != null and menuName != ''">
+          and menuName = #{menuName,jdbcType = VARCHAR}
+        </if>
+    </select>
 </mapper>

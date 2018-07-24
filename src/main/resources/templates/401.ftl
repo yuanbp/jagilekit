@@ -11,7 +11,7 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" href="/static/images/java.ico"/>
 
-    <link rel="stylesheet" href="/static/common/common.css"/>
+    <link rel="stylesheet" href="/static/navtab/common.css"/>
 </head>
 <body>
 <div class="cw404">
