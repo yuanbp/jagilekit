@@ -3,6 +3,8 @@ buildscript {
         springBootVersion = '2.0.1.RELEASE'
     }
     repositories {
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+        maven { url "https://mirrors.huaweicloud.com/repository/maven/" }
         mavenCentral()
     }
     dependencies {
@@ -33,6 +35,8 @@ def env = System.getProperty("env") ?: "dev"
 /*
   根据变量取配置文件
  */
+
+apply from: 'depends-common.gradle'
 apply from: "depends-${env}.gradle"
 
 repositories {
